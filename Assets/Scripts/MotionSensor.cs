@@ -1,14 +1,15 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Audio))]
-public class Alarm : MonoBehaviour
+[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(Speaker))]
+public class MotionSensor : MonoBehaviour
 {
-    private Audio _audio;
+    private Speaker _speaker;
     private bool _isInside;
 
     private void Awake()
     {
-        _audio = GetComponent<Audio>();
+        _speaker = GetComponent<Speaker>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -18,13 +19,13 @@ public class Alarm : MonoBehaviour
             if (_isInside)
             {
                 _isInside = false;
-                _audio.DecreaseMusicVolume();
+                _speaker.DecreaseMusicVolume();
             }
             else
             {
                 _isInside = true;
-                _audio.IncreaseMusicVolume();
-                _audio.PlayMusic();
+                _speaker.IncreaseMusicVolume();
+                _speaker.Play();
             }
         }
     }

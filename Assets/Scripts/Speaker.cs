@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class Audio : MonoBehaviour
+public class Speaker : MonoBehaviour
 {
     [SerializeField] private AudioClip _audioClip;
     [SerializeField] private float _delay;
@@ -22,10 +22,10 @@ public class Audio : MonoBehaviour
         _waitForOneSeconds = new WaitForSeconds(_delay);
     }
 
-    public void PlayMusic()
+    public void Play()
     {
         CheckCoroutine(_currentMusic);
-        _currentMusic = StartCoroutine(Music());
+        _currentMusic = StartCoroutine(PlayAudioClip());
     }
 
     public void IncreaseMusicVolume()
@@ -58,7 +58,7 @@ public class Audio : MonoBehaviour
         }
     }
 
-    private IEnumerator Music()
+    private IEnumerator PlayAudioClip()
     {
         while (_audioSource.volume > _minVolume)
         {
