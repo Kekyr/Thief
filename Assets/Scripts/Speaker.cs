@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(MotionSensor))]
 public class Speaker : MonoBehaviour
 {
     [SerializeField] private AudioClip _audioClip;
