@@ -11,33 +11,41 @@ public class Speaker : MonoBehaviour
     private Coroutine _currentVolume;
     private Coroutine _currentMusic;
     private AudioSource _audioSource;
+    private MotionSensor _motionSensor;
     private WaitForSeconds _waitForOneSeconds;
 
     private float _minVolume = 0;
-    private float _maxVolume = 1;
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+        _motionSensor = GetComponent<MotionSensor>();
         _waitForOneSeconds = new WaitForSeconds(_delay);
     }
 
-    public void Play()
+    private void OnEnable()
+    {
+        _motionSensor.Entered += ChangeMusicVolume;
+        _motionSensor.Exited += ChangeMusicVolume;
+    }
+
+    private void OnDisable()
+    {
+        _motionSensor.Entered -= ChangeMusicVolume;
+        _motionSensor.Exited -= ChangeMusicVolume;
+    }
+
+    public void ChangeMusicVolume(float targetVolume)
+    {
+        CheckCoroutine(_currentVolume);
+        _currentVolume = StartCoroutine(ChangeVolume(targetVolume));
+        Play();
+    }
+
+    private void Play()
     {
         CheckCoroutine(_currentMusic);
         _currentMusic = StartCoroutine(PlayAudioClip());
-    }
-
-    public void IncreaseMusicVolume()
-    {
-        CheckCoroutine(_currentVolume);
-        _currentVolume = StartCoroutine(ChangeVolume(_maxVolume));
-    }
-
-    public void DecreaseMusicVolume()
-    {
-        CheckCoroutine(_currentVolume);
-        _currentVolume = StartCoroutine(ChangeVolume(_minVolume));
     }
 
     private IEnumerator ChangeVolume(float targetVolume)

@@ -1,16 +1,16 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider))]
-[RequireComponent(typeof(Speaker))]
 public class MotionSensor : MonoBehaviour
 {
-    private Speaker _speaker;
-    private bool _isInside;
+    public event UnityAction<float> Entered;
+    public event UnityAction<float> Exited;
 
-    private void Awake()
-    {
-        _speaker = GetComponent<Speaker>();
-    }
+    private float _minVolume = 0;
+    private float _maxVolume = 1;
+    
+    private bool _isInside;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -19,13 +19,12 @@ public class MotionSensor : MonoBehaviour
             if (_isInside)
             {
                 _isInside = false;
-                _speaker.DecreaseMusicVolume();
+                Exited?.Invoke(_minVolume);
             }
             else
             {
                 _isInside = true;
-                _speaker.IncreaseMusicVolume();
-                _speaker.Play();
+                Entered?.Invoke(_maxVolume);
             }
         }
     }
